@@ -1,8 +1,9 @@
-
 #include "iostream"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+#include "shader.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -72,6 +73,8 @@ int main()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);  //启用顶点属性，默认是禁止的
 
+	Shader ourShader("shader.vertex", "shader.frag");
+
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); //线框模式
 
 	while (!glfwWindowShouldClose(window))
@@ -82,6 +85,13 @@ int main()
 	    //清空屏幕
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		ourShader.use();
+		ourShader.setFloat("someUniform", 1.0f);
+
+		glBindVertexArray(VAO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
 
 		//交换缓冲
 		glfwSwapBuffers(window);
